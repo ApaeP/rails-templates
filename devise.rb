@@ -8,22 +8,27 @@ inject_into_file "Gemfile", before: "group :development, :test do" do
     gem "devise"
     gem "autoprefixer-rails"
     gem "font-awesome-sass", "~> 6.1"
+    # gem "font-awesome-sass", "~> 6.4.2"
     gem "simple_form", github: "heartcombo/simple_form"
     gem "sassc-rails"
-
+    gem "view_component"
   RUBY
 end
 
 inject_into_file "Gemfile", after: "group :development, :test do" do
-  "\n  gem \"dotenv-rails\""
+  "\n  gem \"dotenv-rails\"\n  gem \"annotate\"\n  gem \"pry-byebug\"\n  gem \"pry-rails\"\n  gem \"web-console\""
+end
+
+inject_into_file "Gemfile", after: "group :development do" do
+  "\n  gem \"better_errors\"\n  gem \"binding_of_caller\""
 end
 
 # Assets
 ########################################
 run "rm -rf app/assets/stylesheets"
 run "rm -rf vendor"
-run "curl -L https://github.com/lewagon/rails-stylesheets/archive/master.zip > stylesheets.zip"
-run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip && rm -f app/assets/rails-stylesheets-master/README.md"
+run "curl -L https://github.com/ApaeP/rails-stylesheets/archive/master.zip > stylesheets.zip"
+run "unzip stylesheets.zip -d app/assets && rm -f stylesheets.zip"
 run "mv app/assets/rails-stylesheets-master app/assets/stylesheets"
 
 # Layout
@@ -35,38 +40,38 @@ gsub_file(
   '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">'
 )
 
-# Flashes
-########################################
-file "app/views/shared/_flashes.html.erb", <<~HTML
-  <% if notice %>
-    <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
-      <%= notice %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-      </button>
-    </div>
-  <% end %>
-  <% if alert %>
-    <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
-      <%= alert %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-      </button>
-    </div>
-  <% end %>
-HTML
+# # Flashes
+# ########################################
+# file "app/views/shared/_flashes.html.erb", <<~HTML
+#   <% if notice %>
+#     <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
+#       <%= notice %>
+#       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+#       </button>
+#     </div>
+#   <% end %>
+#   <% if alert %>
+#     <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
+#       <%= alert %>
+#       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+#       </button>
+#     </div>
+#   <% end %>
+# HTML
 
-run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
+# run "curl -L https://raw.githubusercontent.com/lewagon/awesome-navbars/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb"
 
-inject_into_file "app/views/layouts/application.html.erb", after: "<body>" do
-  <<~HTML
-    <%= render "shared/navbar" %>
-    <%= render "shared/flashes" %>
-  HTML
-end
+# inject_into_file "app/views/layouts/application.html.erb", after: "<body>" do
+#   <<~HTML
+#     <%= render "shared/navbar" %>
+#     <%= render "shared/flashes" %>
+#   HTML
+# end
 
 # README
 ########################################
 markdown_file_content = <<~MARKDOWN
-  Rails app generated with [lewagon/rails-templates](https://github.com/lewagon/rails-templates), created by the [Le Wagon coding bootcamp](https://www.lewagon.com) team.
+  Ok
 MARKDOWN
 file "README.md", markdown_file_content, force: true
 
@@ -191,5 +196,5 @@ after_bundle do
   ########################################
   git :init
   git add: "."
-  git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
+  git commit: "-m 'Init app with minimal template'"
 end
