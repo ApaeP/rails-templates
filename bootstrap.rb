@@ -14,9 +14,8 @@ inject_into_file "Gemfile", before: "group :development, :test do" do
   RUBY
 end
 
-
 inject_into_file "Gemfile", after: "group :development, :test do" do
-  "\n  gem \"dotenv-rails\"\n  gem \"annotate\"\n  gem \"pry-byebug\"\n  gem \"pry-rails\"\n  gem \"web-console\""
+  "\n  gem \"dotenv-rails\"\n  gem \"annotate\"\n  gem \"pry-byebug\"\n  gem \"pry-rails\"\n"
 end
 
 inject_into_file "Gemfile", after: "group :development do" do
@@ -55,7 +54,6 @@ generators = <<~RUBY
     generate.helper false
     generate.test_framework :test_unit, fixture: false
   end
-
 RUBY
 
 environment generators
@@ -77,6 +75,7 @@ after_bundle do
   rails_command "db:drop db:create db:migrate"
   generate("simple_form:install", "--bootstrap")
   generate(:controller, "pages", "home", "--skip-routes", "--no-test-framework")
+  generate(:component, "Example", 'title')
 
   # Routes
   ########################################
